@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Malla curricular · SIGA Convalidaciones</title>
+<style>
+  :root{
+    --brand:#0a2a43; --brand-2:#16708c; --accent:#1f9d6b; --accent-deep:#15875a;
+    --bg:#eef2f6; --surface:#ffffff; --surface-2:#f5f8fb;
+    --ink:#0d1a2c; --ink-soft:#566276; --ink-faint:#8794a6; --line:#dce3ec;
+    --warn:#b45309; --warn-tint:#fdf0dd;
+
+    --a-matematicas:#2563eb;      --t-matematicas:#e7edfd;
+    --a-fisica:#0891b2;           --t-fisica:#e0f3f8;
+    --a-control:#16a34a;          --t-control:#e4f6ea;
+    --a-electronica:#dc2626;      --t-electronica:#fce8e8;
+    --a-mecatronica:#ea580c; --a-computacion:#0f766e; --a-software:#be123c;      --t-mecatronica:#fcebdf;
+    --a-digital:#7c3aed;          --t-digital:#efe8fd;
+    --a-emprendimiento:#db2777;   --t-emprendimiento:#fce7f1;
+    --a-integracion:#92400e;      --t-integracion:#f6eae2;
+    --a-ingles:#ca8a04;           --t-ingles:#f9f1da;
+    --a-formaciongeneral:#475569; --t-formaciongeneral:#eef1f5;
+    --a-energia:#0d9488;          --t-energia:#d8f1ec;
+    --a-industrial:#4338ca;       --t-industrial:#e7e7fb;
+    --a-economia:#65a30d;         --t-economia:#eef6dd;
+    --a-geologia:#78350f;         --t-geologia:#f2e8de;
+
+    --radius:14px; --shadow:0 1px 2px rgba(13,26,44,.06),0 8px 24px rgba(13,26,44,.06);
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:var(--font); color:var(--ink); background:var(--bg); -webkit-font-smoothing:antialiased;}
+  a{color:inherit}
+
+  /* ---------- header ---------- */
+  header.top{
+    background:linear-gradient(135deg,var(--brand),var(--brand-2));
+    color:#fff; padding:18px clamp(16px,4vw,40px) 22px;
+  }
+  .top-row{display:flex; align-items:center; gap:14px; flex-wrap:wrap;}
+  .crest{width:38px;height:38px;border-radius:9px;background:rgba(255,255,255,.14);
+    display:grid;place-items:center;font-weight:800;letter-spacing:.5px;font-size:15px;flex:none;border:1px solid rgba(255,255,255,.25)}
+  .brandwrap{display:flex;flex-direction:column;line-height:1.15}
+  .brandwrap b{font-size:15px;letter-spacing:.2px}
+  .brandwrap span{font-size:12px;opacity:.8}
+  .flow{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;opacity:.95;flex-wrap:wrap}
+  .flow .dot{display:inline-flex;align-items:center;gap:6px}
+  .flow .n{width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:11px;font-weight:700}
+  .flow .dot.done .n{background:var(--accent)}
+  .flow .dot.here{font-weight:700}
+  .flow .sep{opacity:.45}
+
+  h1.title{margin:18px 0 2px;font-size:clamp(22px,3.4vw,30px);letter-spacing:-.4px}
+  .sub{margin:0;opacity:.85;font-size:14px;max-width:64ch}
+
+  /* control bar */
+  .controls{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-top:18px}
+  .field{display:flex;flex-direction:column;gap:5px}
+  .field label{font-size:11.5px;text-transform:uppercase;letter-spacing:.7px;opacity:.8}
+  select#car{
+    appearance:none;background:rgba(255,255,255,.96);color:var(--ink);border:0;border-radius:10px;
+    padding:11px 38px 11px 13px;font-size:14.5px;font-weight:600;min-width:min(320px,80vw);cursor:pointer;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%230a2a43' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 14px center;
+  }
+  .who{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 14px 7px 9px;font-size:13.5px}
+  .who .av{width:26px;height:26px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-size:12px;font-weight:800;color:#06291c}
+  .who .ghost{opacity:.7;font-style:italic}
+
+  /* stats */
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);border-radius:12px;
+    padding:10px 15px;min-width:120px}
+  .stat b{display:block;font-size:23px;line-height:1.05;letter-spacing:-.5px}
+  .stat span{font-size:12px;opacity:.85}
+  .stat.ok b{color:#9ff0c9}
+  .stat.rev b{color:#ffd9a6}
+
+  /* ---------- legend ---------- */
+  .legend{display:flex;gap:8px 16px;flex-wrap:wrap;align-items:center;
+    padding:14px clamp(16px,4vw,40px);background:var(--surface);border-bottom:1px solid var(--line)}
+  .legend .lg{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-soft)}
+  .legend .sw{width:12px;height:12px;border-radius:4px;flex:none}
+  .legend .state{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600}
+  .legend .chip{width:14px;height:14px;border-radius:5px;border:1.5px solid;flex:none}
+  .legend .chip.cv{background:var(--t-control);border-color:var(--accent)}
+  .legend .chip.rv{background:var(--warn-tint);border-color:var(--warn)}
+  .legend-sep{width:1px;height:18px;background:var(--line);margin:0 2px}
+
+  /* ---------- board ---------- */
+  .board-wrap{overflow-x:auto;padding:22px clamp(16px,4vw,40px) 40px}
+  .board{display:flex;gap:16px;min-width:max-content;align-items:flex-start}
+  .col{flex:0 0 232px;display:flex;flex-direction:column;gap:11px}
+  .col-h{position:sticky;top:0;display:flex;align-items:baseline;justify-content:space-between;
+    padding:2px 4px 9px;border-bottom:2px solid var(--brand);margin-bottom:2px}
+  .col-h b{font-size:14px;color:var(--brand)}
+  .col-h span{font-size:11.5px;color:var(--ink-faint)}
+  #board{position:relative}
+  .arrows{position:absolute;left:0;top:0;pointer-events:none;overflow:visible;z-index:4}
+  .arrows path.edge{fill:none;stroke:var(--ec,#9aa6b6);stroke-width:2.8;opacity:.6;
+    stroke-linecap:round;transition:opacity .15s ease,stroke-width .15s ease,stroke .15s ease}
+  .arrows.focusing path.edge{opacity:.08}
+  .arrows path.edge.on{opacity:1;stroke-width:4.2}
+  body.no-arrows .arrows{display:none}
+  .prq-toggle{appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--surface);
+    color:var(--ink-soft);border-radius:10px;padding:9px 13px;font:inherit;font-size:12.5px;font-weight:600;
+    display:inline-flex;align-items:center;gap:8px;transition:background .15s,border-color .15s,color .15s}
+  .prq-toggle:hover{border-color:var(--brand-2)}
+  .prq-toggle .ar{font-size:15px;line-height:1}
+  body.no-arrows .prq-toggle{color:var(--ink-faint);background:var(--surface-2)}
+  body.no-arrows .prq-toggle .ar{opacity:.35}
+
+  .card{position:relative;background:var(--surface);border:1px solid var(--line);
+    border-left:4px solid var(--ac,var(--ink-faint));border-radius:11px;padding:11px 12px;
+    box-shadow:var(--shadow);cursor:pointer;transition:transform .12s ease,box-shadow .12s ease;overflow:hidden}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(13,26,44,.08),0 14px 30px rgba(13,26,44,.12)}
+  .card:focus-visible{outline:3px solid var(--brand-2);outline-offset:2px}
+  .card .cod{font-size:10.5px;letter-spacing:.6px;color:var(--ink-faint);font-weight:700;text-transform:uppercase}
+  .card .nm{font-size:13.5px;font-weight:650;line-height:1.25;margin:3px 0 9px}
+  .card .meta{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .card .area{display:inline-flex;align-items:center;gap:6px;font-size:11px;color:var(--ink-soft)}
+  .card .area .d{width:9px;height:9px;border-radius:3px;background:var(--ac)}
+  .card .cr{font-size:11px;color:var(--ink-faint);font-weight:600}
+
+  .card.cv{border-color:var(--accent);background:linear-gradient(180deg,var(--t-control),var(--surface) 60%)}
+  .card.cv .nm{color:var(--accent-deep)}
+  .card.rv{border-color:#e7c79a;background:linear-gradient(180deg,var(--warn-tint),var(--surface) 70%)}
+  .card.dim{opacity:.92}
+
+  /* stamp signature */
+  .stamp{position:absolute;top:9px;right:-30px;transform:rotate(8deg);
+    background:var(--accent);color:#04321f;font-size:9.5px;font-weight:800;letter-spacing:.8px;
+    text-transform:uppercase;padding:3px 34px;box-shadow:0 1px 3px rgba(0,0,0,.16)}
+  .stamp.rev{background:#e8a44d;color:#3a2406}
+  .seal{position:absolute;right:8px;bottom:7px;width:26px;height:26px;border-radius:50%;
+    border:1.8px solid var(--accent);color:var(--accent-deep);display:grid;place-items:center;
+    font-size:13px;font-weight:900;opacity:.85;background:rgba(255,255,255,.7)}
+  .seal.rev{border-color:var(--warn);color:var(--warn)}
+
+  /* empty / standalone hint */
+  .hint{margin:18px clamp(16px,4vw,40px) 0;background:var(--surface-2);border:1px dashed var(--line);
+    border-radius:12px;padding:14px 16px;font-size:13.5px;color:var(--ink-soft);display:flex;gap:10px;align-items:flex-start}
+  .hint b{color:var(--ink)}
+  .hint a{color:var(--brand-2);font-weight:600;text-decoration:none}
+  .hint a:hover{text-decoration:underline}
+  .hint .ic{flex:none;color:var(--brand-2)}
+
+  /* footer */
+  footer{padding:24px clamp(16px,4vw,40px) 40px;color:var(--ink-faint);font-size:12.5px;border-top:1px solid var(--line);background:var(--surface)}
+  footer a{color:var(--brand-2);text-decoration:none;font-weight:600}
+  footer a:hover{text-decoration:underline}
+
+  /* drawer */
+  .scrim{position:fixed;inset:0;background:rgba(8,18,30,.42);opacity:0;pointer-events:none;transition:opacity .2s;z-index:40}
+  .scrim.on{opacity:1;pointer-events:auto}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,92vw);background:var(--surface);
+    box-shadow:-12px 0 40px rgba(8,18,30,.22);transform:translateX(100%);transition:transform .22s ease;z-index:50;
+    display:flex;flex-direction:column}
+  .drawer.on{transform:none}
+  .dr-h{padding:20px 22px 16px;border-bottom:1px solid var(--line);position:relative}
+  .dr-h .cod{font-size:11px;letter-spacing:.6px;color:var(--ink-faint);font-weight:700;text-transform:uppercase}
+  .dr-h h3{margin:5px 0 0;font-size:19px;letter-spacing:-.3px;padding-right:34px}
+  .dr-x{position:absolute;top:16px;right:16px;width:32px;height:32px;border:0;border-radius:9px;background:var(--surface-2);
+    cursor:pointer;font-size:18px;color:var(--ink-soft);display:grid;place-items:center}
+  .dr-x:hover{background:var(--line)}
+  .dr-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .tag{font-size:11.5px;font-weight:600;padding:5px 10px;border-radius:999px;background:var(--surface-2);color:var(--ink-soft);display:inline-flex;gap:6px;align-items:center}
+  .tag .d{width:9px;height:9px;border-radius:3px}
+  .tag.cv{background:var(--t-control);color:var(--accent-deep)}
+  .tag.rv{background:var(--warn-tint);color:var(--warn)}
+  .dr-b{padding:20px 22px 30px;overflow-y:auto}
+  .dr-b h4{margin:0 0 8px;font-size:12px;letter-spacing:.6px;text-transform:uppercase;color:var(--ink-faint)}
+  .dr-b p.cont{margin:0 0 22px;font-size:13.5px;line-height:1.55;color:var(--ink-soft)}
+  .dr-b ul{margin:0;padding-left:18px}
+  .dr-b li{font-size:13.5px;line-height:1.5;margin-bottom:7px;color:var(--ink-soft)}
+  .prq-list{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}
+  .prq{appearance:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+    border:1px solid var(--line);background:var(--surface-2);border-radius:9px;
+    padding:7px 11px 7px 9px;font:inherit;text-align:left;transition:border-color .15s,background .15s,transform .15s}
+  .prq:hover{background:var(--surface);border-color:var(--brand-2);transform:translateY(-1px)}
+  .prq:focus-visible{outline:2px solid var(--brand-2);outline-offset:2px}
+  .prq .d{width:9px;height:9px;border-radius:3px;flex:none;background:var(--ac,var(--ink-faint))}
+  .prq .t{display:flex;flex-direction:column;line-height:1.15}
+  .prq .t .c{font-size:10px;letter-spacing:.5px;font-weight:700;text-transform:uppercase;color:var(--ink-faint)}
+  .prq .t .n{font-size:12.5px;color:var(--ink)}
+  .prq-none{font-size:13px;color:var(--ink-faint);margin:0 0 22px;font-style:italic}
+
+  @media (max-width:560px){
+    .col{flex-basis:78vw}
+    .flow{width:100%;margin-left:0}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important}
+  }
+  .hint[hidden]{display:none}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-row">
+    <div class="crest">SIGA</div>
+    <div class="brandwrap"><b>SIGA · Convalidación de estudios</b><span>Reconocimiento de aprendizajes previos</span></div>
+    <nav class="flow" aria-label="Pasos del proceso">
+      <span class="dot done"><span class="n">✓</span> Identificación</span>
+      <span class="sep">›</span>
+      <span class="dot done"><span class="n">✓</span> Convalidación</span>
+      <span class="sep">›</span>
+      <span class="dot here"><span class="n">3</span> Malla</span>
+    </nav>
+  </div>
+
+  <h1 class="title">Tu malla curricular</h1>
+  <p class="sub" id="sub">Plan de estudios completo con tus asignaturas convalidadas destacadas. Toca cualquier ramo para ver sus contenidos y aprendizajes.</p>
+
+  <div class="controls">
+    <div class="field">
+      <label for="car">Carrera de destino</label>
+      <select id="car"></select>
+    </div>
+    <div class="who" id="who" hidden>
+      <span class="av" id="avatar">·</span>
+      <span id="whoName"></span>
+    </div>
+    <button class="prq-toggle" id="prqToggle" type="button" aria-pressed="true" title="Mostrar u ocultar prerrequisitos">
+      <span class="ar">&#8627;</span> Prerrequisitos
+    </button>
+  </div>
+
+  <div class="stats" id="stats"></div>
+</header>
+
+<div class="legend" id="legend"></div>
+
+<div class="hint" id="hint" hidden>
+  <svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 8v5M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+  <div id="hintText"></div>
+</div>
+
+<div class="board-wrap">
+  <div class="board" id="board"></div>
+</div>
+
+<footer>
+  Este mapa muestra el resultado estimado de la convalidación y <b>no constituye una resolución oficial</b>. La decisión final corresponde a la Dirección de Carrera.
+  &nbsp;·&nbsp; <a href="convalidacion.html">‹ Volver a la convalidación</a>
+</footer>
+
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drName">
+  <div class="dr-h">
+    <button class="dr-x" id="drX" aria-label="Cerrar">✕</button>
+    <span class="cod" id="drCod"></span>
+    <h3 id="drName"></h3>
+    <div class="dr-tags" id="drTags"></div>
+  </div>
+  <div class="dr-b">
+    <h4>Contenidos</h4>
+    <p class="cont" id="drCont"></p>
+    <div id="drPrqWrap" hidden>
+      <h4>Prerrequisitos</h4>
+      <div class="prq-list" id="drPrq"></div>
+    </div>
+    <div id="drAEwrap" hidden>
+      <h4>Aprendizajes esperados</h4>
+      <ul id="drAE"></ul>
+    </div>
+  </div>
+</aside>
+
+<script>
+const MALLAS = {"Ingeniería Civil en Informática": [{"codigo": "MAT0101", "nombre": "Introducción a las Matemáticas", "semestre": 1, "creditos": 8, "area": "matematicas", "contenidos": "Números reales y operatoria algebraica. Ecuaciones e inecuaciones lineales y cuadráticas, valor absoluto. Lógica proposicional y teoría de conjuntos. Polinomios, factorización y fracciones algebraicas. Funciones reales: dominio, recorrido, composición e inversa. Funciones exponencial, logarítmica y trigonométricas. Identidades trigonométricas y resolución de triángulos.", "aprendizajes": ["Resolver ecuaciones e inecuaciones en el conjunto de los números reales.", "Aplicar lógica proposicional y teoría de conjuntos en la demostración de resultados simples.", "Modelar situaciones mediante funciones exponenciales, logarítmicas y trigonométricas."]}, {"codigo": "FIS0102", "nombre": "Física General", "semestre": 1, "creditos": 8, "area": "fisica", "contenidos": "Magnitudes físicas, unidades del sistema internacional y análisis dimensional. Vectores. Cinemática en una dimensión: posición, velocidad y aceleración. Nociones de fuerza y leyes de Newton. Calor, temperatura y dilatación térmica. Carga eléctrica, corriente y ley de Ohm en circuitos simples. Ondas y sonido.", "aprendizajes": ["Aplicar el sistema internacional de unidades y el análisis dimensional.", "Describir el movimiento rectilíneo y sus causas mediante las leyes de Newton.", "Explicar fenómenos térmicos y eléctricos básicos."]}, {"codigo": "IIN0103", "nombre": "Introducción a la Ingeniería", "semestre": 1, "creditos": 6, "area": "formaciongeneral", "contenidos": "Rol del ingeniero en la sociedad y campos de desempeño profesional. Metodología de resolución de problemas de ingeniería y pensamiento de diseño. Trabajo en equipo y liderazgo. Proyecto de ingeniería en equipos: definición del problema, levantamiento de requerimientos, prototipo y presentación de resultados.", "aprendizajes": ["Reconocer el rol del ingeniero y sus campos de desempeño.", "Aplicar una metodología de resolución de problemas de ingeniería en un proyecto en equipo.", "Comunicar en forma oral y escrita el resultado de un proyecto."]}, {"codigo": "PRG0104", "nombre": "Introducción a la Programación", "semestre": 1, "creditos": 8, "area": "digital", "contenidos": "Algoritmos y resolución de problemas computacionales. Lenguaje Python: variables, tipos de datos, expresiones y operadores. Estructuras de control: condicionales y ciclos while y for. Funciones, parámetros y modularización. Listas, tuplas, diccionarios y strings. Lectura y escritura de archivos. Depuración y pruebas de programas.", "aprendizajes": ["Diseñar algoritmos para resolver problemas computacionales simples.", "Implementar programas en Python usando estructuras de control, funciones y colecciones.", "Depurar y probar programas para verificar su correcto funcionamiento."]}, {"codigo": "MAT0201", "nombre": "Cálculo Diferencial", "semestre": 2, "creditos": 8, "area": "matematicas", "contenidos": "Límites de funciones reales, límites laterales y al infinito. Continuidad y teorema del valor intermedio. Derivada: definición, interpretación geométrica como pendiente de la recta tangente y como razón de cambio. Reglas de derivación, regla de la cadena, derivación implícita. Teorema del valor medio, regla de L’Hôpital. Análisis de gráficas: crecimiento, concavidad, máximos y mínimos. Problemas de optimización.", "aprendizajes": ["Calcular límites y analizar la continuidad de funciones reales.", "Aplicar reglas de derivación, regla de la cadena y derivación implícita.", "Resolver problemas de razón de cambio y optimización mediante la derivada."]}, {"codigo": "FIS0202", "nombre": "Física Experimental", "semestre": 2, "creditos": 6, "area": "fisica", "contenidos": "Método experimental y diseño de experimentos. Mediciones, instrumentos y teoría de errores: incerteza absoluta y relativa, propagación de errores. Gráficos, linealización y ajuste por mínimos cuadrados. Informes de laboratorio. Experiencias de caída libre, péndulo simple, ley de Hooke, calorimetría y circuitos resistivos.", "aprendizajes": ["Realizar mediciones experimentales cuantificando su incerteza.", "Analizar datos experimentales mediante gráficos y ajuste por mínimos cuadrados.", "Comunicar resultados experimentales en informes de laboratorio."]}, {"codigo": "QUI0203", "nombre": "Química y Ambiente", "semestre": 2, "creditos": 5, "area": "fisica", "contenidos": "Estructura atómica y tabla periódica. Enlace químico y geometría molecular. Estequiometría y reacciones químicas. Soluciones y concentraciones. Equilibrio químico, ácidos y bases, pH. Electroquímica y corrosión. Química ambiental: contaminación del aire y del agua, gestión de residuos y sustentabilidad.", "aprendizajes": ["Relacionar la estructura atómica con las propiedades periódicas y el enlace químico.", "Resolver problemas de estequiometría, soluciones y equilibrio químico.", "Evaluar el impacto ambiental de procesos químicos."]}, {"codigo": "DAT0204", "nombre": "Base de Datos", "semestre": 2, "creditos": 7, "area": "digital", "contenidos": "Sistemas de gestión de bases de datos. Modelo entidad-relación y diagrama entidad-relación. Modelo relacional, claves primarias y foráneas. Normalización: primera, segunda y tercera forma normal. Lenguaje SQL: creación de tablas, consultas, joins, agregaciones y subconsultas. Vistas, índices y transacciones.", "aprendizajes": ["Diseñar modelos entidad-relación a partir de requerimientos.", "Transformar modelos conceptuales en esquemas relacionales normalizados.", "Construir consultas SQL para crear, consultar y modificar bases de datos."]}, {"codigo": "HUM0205", "nombre": "Habilidades Comunicativas", "semestre": 2, "creditos": 4, "area": "formaciongeneral", "contenidos": "Comunicación oral y escrita en contextos académicos y profesionales. Comprensión lectora de textos técnicos. Redacción de informes, resúmenes y correos formales. Argumentación. Presentaciones orales efectivas.", "aprendizajes": ["Redactar textos académicos y profesionales con coherencia y cohesión.", "Realizar presentaciones orales efectivas."]}, {"codigo": "MAT0301", "nombre": "Cálculo Integral", "semestre": 3, "creditos": 7, "area": "matematicas", "contenidos": "Antiderivadas e integral indefinida. Integral definida, sumas de Riemann y teorema fundamental del cálculo. Técnicas de integración: sustitución, integración por partes, fracciones parciales, sustitución trigonométrica. Integrales impropias. Aplicaciones: área entre curvas, volúmenes de sólidos de revolución, longitud de arco. Sucesiones y series numéricas, criterios de convergencia, series de potencias y de Taylor.", "aprendizajes": ["Aplicar técnicas de integración en el cálculo de integrales definidas e indefinidas.", "Calcular áreas, volúmenes y longitudes de arco mediante integrales.", "Analizar la convergencia de series numéricas y de potencias."]}, {"codigo": "FIS0302", "nombre": "Mecánica", "semestre": 3, "creditos": 8, "area": "fisica", "contenidos": "Cinemática en dos y tres dimensiones: movimiento de proyectiles y movimiento circular. Dinámica de la partícula: leyes de Newton, roce y diagramas de cuerpo libre. Trabajo, energía cinética y potencial, conservación de la energía mecánica. Momentum lineal, impulso y colisiones. Dinámica de rotación, torque y momento de inercia. Equilibrio estático. Oscilaciones armónicas.", "aprendizajes": ["Analizar el movimiento de partículas en dos y tres dimensiones.", "Aplicar las leyes de Newton y diagramas de cuerpo libre a sistemas mecánicos.", "Resolver problemas usando conservación de energía, momentum lineal y dinámica de rotación."]}, {"codigo": "PRG0303", "nombre": "Algoritmos y Estructuras de Datos", "semestre": 3, "creditos": 7, "area": "digital", "contenidos": "Tipos abstractos de datos. Arreglos, listas enlazadas, pilas y colas. Recursividad. Árboles binarios, árboles de búsqueda y heaps. Tablas hash. Grafos: representación, recorridos en profundidad y amplitud. Algoritmos de ordenamiento: burbuja, inserción, mergesort, quicksort. Búsqueda binaria. Análisis de complejidad y notación O grande.", "aprendizajes": ["Implementar estructuras de datos lineales y no lineales.", "Aplicar algoritmos de ordenamiento, búsqueda y recorrido de grafos.", "Analizar la complejidad temporal de algoritmos usando notación O grande."]}, {"codigo": "ETI0304", "nombre": "Ética y Normativa Profesional", "semestre": 3, "creditos": 4, "area": "formaciongeneral", "contenidos": "Ética profesional del ingeniero. Responsabilidad social y sustentabilidad. Propiedad intelectual y licencias de software. Protección de datos personales. Normativa laboral y contractual. Dilemas éticos en tecnología.", "aprendizajes": ["Analizar dilemas éticos propios del ejercicio de la ingeniería.", "Aplicar la normativa de propiedad intelectual y protección de datos."]}, {"codigo": "EMP0305", "nombre": "Taller de Innovación I", "semestre": 3, "creditos": 4, "area": "emprendimiento", "contenidos": "Pensamiento de diseño. Empatía con usuarios e identificación de problemas. Ideación y prototipado rápido. Validación con usuarios. Trabajo colaborativo en equipos.", "aprendizajes": ["Identificar problemas reales mediante técnicas de empatía con usuarios.", "Prototipar y validar soluciones innovadoras."]}, {"codigo": "MAT0401", "nombre": "Ecuaciones Diferenciales", "semestre": 4, "creditos": 7, "area": "matematicas", "contenidos": "Ecuaciones diferenciales ordinarias de primer orden: separables, lineales, exactas. Ecuaciones lineales de orden superior con coeficientes constantes. Transformada de Laplace. Matrices, determinantes y sistemas de ecuaciones lineales. Valores propios y vectores propios. Sistemas de ecuaciones diferenciales lineales. Modelación de crecimiento poblacional, circuitos y vibraciones mecánicas.", "aprendizajes": ["Resolver ecuaciones diferenciales ordinarias de primer orden y de orden superior.", "Aplicar la transformada de Laplace en la resolución de problemas de valor inicial.", "Resolver sistemas de ecuaciones diferenciales lineales usando valores y vectores propios."]}, {"codigo": "FIS0402", "nombre": "Electricidad y Magnetismo", "semestre": 4, "creditos": 7, "area": "fisica", "contenidos": "Carga eléctrica y ley de Coulomb. Campo eléctrico y ley de Gauss. Potencial eléctrico. Capacitancia y dieléctricos. Corriente, resistencia y circuitos de corriente continua, leyes de Kirchhoff. Campo magnético, fuerza de Lorentz, ley de Biot-Savart y ley de Ampère. Inducción electromagnética, ley de Faraday e inductancia.", "aprendizajes": ["Calcular campos y potenciales eléctricos de distribuciones de carga.", "Analizar circuitos de corriente continua mediante las leyes de Kirchhoff.", "Aplicar las leyes de Ampère y Faraday a problemas de magnetismo e inducción."]}, {"codigo": "EMP0403", "nombre": "Taller de Innovación II", "semestre": 4, "creditos": 4, "area": "emprendimiento", "contenidos": "Modelo de negocios y propuesta de valor. Lienzo de modelo de negocios. Segmentos de clientes. Producto mínimo viable. Métricas de validación.", "aprendizajes": ["Diseñar modelos de negocio para soluciones innovadoras.", "Validar un producto mínimo viable con clientes."]}, {"codigo": "PRA0404", "nombre": "Práctica Profesional I", "semestre": 4, "creditos": 8, "area": "integracion", "contenidos": "Práctica en una organización de al menos 180 horas. Inserción en equipos de trabajo, aplicación de conocimientos básicos de la disciplina e informe de práctica.", "aprendizajes": ["Desempeñarse en un entorno laboral aplicando conocimientos de la disciplina."]}, {"codigo": "IDI0405", "nombre": "Inglés I", "semestre": 4, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel básico: presente simple y continuo, vocabulario cotidiano, comprensión de textos breves, conversaciones simples.", "aprendizajes": ["Comunicarse en inglés en situaciones cotidianas simples."]}, {"codigo": "MAT0501", "nombre": "Probabilidad y Estadística", "semestre": 5, "creditos": 8, "area": "matematicas", "contenidos": "Estadística descriptiva: medidas de tendencia central y dispersión, gráficos. Probabilidad, axiomas, probabilidad condicional y teorema de Bayes. Variables aleatorias discretas y continuas: binomial, Poisson, normal, exponencial. Distribuciones muestrales y teorema del límite central. Estimación puntual e intervalos de confianza. Pruebas de hipótesis. Regresión lineal simple y correlación.", "aprendizajes": ["Describir conjuntos de datos mediante medidas estadísticas y gráficos.", "Calcular probabilidades usando distribuciones discretas y continuas.", "Aplicar intervalos de confianza, pruebas de hipótesis y regresión lineal en la toma de decisiones."]}, {"codigo": "INF0502", "nombre": "Análisis y Diseño de Algoritmos", "semestre": 5, "creditos": 7, "area": "computacion", "contenidos": "Análisis asintótico y recurrencias, teorema maestro. Estrategias de diseño: dividir y conquistar, algoritmos voraces, programación dinámica y backtracking. Algoritmos sobre grafos: caminos mínimos de Dijkstra y Bellman-Ford, árbol de cobertura mínima, flujo máximo. Clases de complejidad P y NP, reducciones y problemas NP-completos.", "aprendizajes": ["Analizar el costo de algoritmos mediante recurrencias y análisis asintótico.", "Diseñar algoritmos usando dividir y conquistar, estrategias voraces y programación dinámica.", "Clasificar problemas según su complejidad computacional."]}, {"codigo": "INF0503", "nombre": "Computación Paralela", "semestre": 5, "creditos": 5, "area": "computacion", "contenidos": "Arquitecturas paralelas, multinúcleo y GPU. Modelos de programación paralela: memoria compartida y paso de mensajes. Hilos, sincronización, condiciones de carrera y exclusión mutua. OpenMP y MPI. Programación en GPU. Métricas de desempeño: speedup, eficiencia y ley de Amdahl.", "aprendizajes": ["Distinguir arquitecturas y modelos de programación paralela.", "Implementar programas paralelos con memoria compartida y paso de mensajes.", "Evaluar el desempeño de soluciones paralelas mediante speedup y eficiencia."]}, {"codigo": "PRG0504", "nombre": "Paradigmas de Programación", "semestre": 5, "creditos": 6, "area": "digital", "contenidos": "Paradigma orientado a objetos: clases, objetos, encapsulamiento, herencia y polimorfismo. Paradigma funcional: funciones puras, inmutabilidad, funciones de orden superior y recursión. Paradigma lógico. Manejo de excepciones. Patrones de diseño básicos. Comparación de lenguajes y sistemas de tipos.", "aprendizajes": ["Desarrollar programas aplicando el paradigma orientado a objetos.", "Resolver problemas usando el paradigma funcional y funciones de orden superior.", "Seleccionar el paradigma adecuado según el problema."]}, {"codigo": "IDI0505", "nombre": "Inglés II", "semestre": 5, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel pre-intermedio: pasado simple y continuo, futuro, comparativos, lectura de textos descriptivos, escritura de párrafos.", "aprendizajes": ["Comprender y producir textos breves en inglés."]}, {"codigo": "INF0601", "nombre": "Inteligencia Artificial", "semestre": 6, "creditos": 8, "area": "computacion", "contenidos": "Agentes inteligentes. Búsqueda no informada e informada: A*, heurísticas. Búsqueda adversaria y minimax. Problemas de satisfacción de restricciones. Representación del conocimiento y lógica. Razonamiento con incertidumbre y redes bayesianas. Introducción al aprendizaje automático. Ética de la inteligencia artificial.", "aprendizajes": ["Modelar problemas como búsqueda en espacios de estados.", "Aplicar algoritmos de búsqueda informada, adversaria y satisfacción de restricciones.", "Representar conocimiento y razonar con incertidumbre."]}, {"codigo": "SOF0602", "nombre": "Desarrollo Web y Móvil", "semestre": 6, "creditos": 7, "area": "software", "contenidos": "Arquitectura cliente-servidor y protocolo HTTP. HTML, CSS y JavaScript. Frameworks de frontend y diseño responsivo. Desarrollo backend y API REST. Autenticación y sesiones. Persistencia con bases de datos. Desarrollo de aplicaciones móviles multiplataforma. Despliegue de aplicaciones.", "aprendizajes": ["Construir interfaces web responsivas con HTML, CSS y JavaScript.", "Desarrollar servicios backend y API REST con persistencia de datos.", "Desplegar aplicaciones web y móviles."]}, {"codigo": "SOF0603", "nombre": "Redes e Infraestructura", "semestre": 6, "creditos": 6, "area": "software", "contenidos": "Modelo OSI y arquitectura TCP/IP. Capa física y de enlace, Ethernet. Direccionamiento IP, subredes y enrutamiento. Protocolos TCP y UDP. Servicios DNS, DHCP y HTTP. Sistemas operativos de servidor, virtualización y contenedores. Infraestructura en la nube y centros de datos.", "aprendizajes": ["Explicar el funcionamiento de las redes según los modelos OSI y TCP/IP.", "Diseñar esquemas de direccionamiento IP y subredes.", "Configurar servicios de red e infraestructura virtualizada."]}, {"codigo": "DAT0604", "nombre": "Minería de Datos", "semestre": 6, "creditos": 5, "area": "digital", "contenidos": "Proceso de descubrimiento de conocimiento en bases de datos. Preprocesamiento: limpieza, integración, transformación y reducción de datos. Reglas de asociación. Clasificación: árboles de decisión, k vecinos más cercanos, Naive Bayes. Clustering: k-means y jerárquico. Evaluación de modelos y validación cruzada.", "aprendizajes": ["Preparar conjuntos de datos para su análisis.", "Aplicar técnicas de clasificación, clustering y reglas de asociación.", "Evaluar modelos de minería de datos mediante métricas y validación cruzada."]}, {"codigo": "IDI0605", "nombre": "Inglés III", "semestre": 6, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel intermedio: presente perfecto, condicionales, voz pasiva, lectura de textos técnicos, presentaciones breves.", "aprendizajes": ["Comprender textos técnicos en inglés y realizar presentaciones breves."]}, {"codigo": "INF0701", "nombre": "Aprendizaje de Máquina", "semestre": 7, "creditos": 8, "area": "computacion", "contenidos": "Aprendizaje supervisado y no supervisado. Regresión lineal y logística, descenso de gradiente. Sobreajuste y regularización. Máquinas de soporte vectorial. Métodos de ensamble: random forest y boosting. Redes neuronales y aprendizaje profundo. Reducción de dimensionalidad con PCA. Métricas de evaluación.", "aprendizajes": ["Entrenar modelos de aprendizaje supervisado y no supervisado.", "Controlar el sobreajuste mediante regularización y validación.", "Implementar redes neuronales para problemas de clasificación y regresión."]}, {"codigo": "INF0702", "nombre": "Optimización", "semestre": 7, "creditos": 7, "area": "computacion", "contenidos": "Modelos de programación lineal. Método simplex y dualidad. Análisis de sensibilidad. Programación entera y ramificación y acotamiento. Problemas de transporte, asignación y flujo en redes. Optimización no lineal. Heurísticas y metaheurísticas.", "aprendizajes": ["Formular modelos de programación lineal y entera.", "Resolver modelos de optimización con el método simplex y herramientas computacionales.", "Aplicar heurísticas y metaheurísticas a problemas combinatoriales."]}, {"codigo": "SOF0703", "nombre": "Ingeniería de Software I", "semestre": 7, "creditos": 7, "area": "software", "contenidos": "Ciclo de vida del software. Metodologías tradicionales y ágiles: Scrum y Kanban. Ingeniería de requerimientos, historias de usuario y casos de uso. Modelado con UML: diagramas de clases, secuencia y actividades. Arquitectura de software. Control de versiones con Git. Pruebas unitarias.", "aprendizajes": ["Especificar requerimientos de software mediante historias de usuario y casos de uso.", "Modelar sistemas de software con diagramas UML.", "Gestionar el desarrollo con metodologías ágiles y control de versiones."]}, {"codigo": "EMP0704", "nombre": "Taller de Innovación III", "semestre": 7, "creditos": 4, "area": "emprendimiento", "contenidos": "Escalamiento de emprendimientos. Estrategias de crecimiento. Financiamiento y levantamiento de capital. Pitch ante inversionistas.", "aprendizajes": ["Elaborar una estrategia de escalamiento y financiamiento.", "Presentar un emprendimiento ante inversionistas."]}, {"codigo": "IDI0705", "nombre": "Inglés IV", "semestre": 7, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel intermedio alto: estilo indirecto, redacción de correos y reportes profesionales, entrevistas laborales.", "aprendizajes": ["Comunicarse en inglés en contextos profesionales."]}, {"codigo": "INF0801", "nombre": "Electivo de Especialidad I", "semestre": 8, "creditos": 6, "area": "computacion", "contenidos": "Computación en la nube: modelos IaaS, PaaS y SaaS. Arquitecturas de microservicios. Contenedores y orquestación. Escalabilidad, alta disponibilidad y tolerancia a fallas. Costos y facturación en la nube.", "aprendizajes": ["Diseñar arquitecturas de aplicaciones en la nube.", "Desplegar servicios mediante contenedores y orquestadores."]}, {"codigo": "SOF0802", "nombre": "Ingeniería de Software II", "semestre": 8, "creditos": 6, "area": "software", "contenidos": "Patrones de arquitectura y de diseño. Calidad de software y métricas. Pruebas de integración, sistema y aceptación. Integración y despliegue continuo. DevOps. Mantenimiento y refactorización. Gestión de la configuración.", "aprendizajes": ["Aplicar patrones de diseño y arquitectura en sistemas de software.", "Implementar estrategias de prueba, integración y despliegue continuo.", "Evaluar la calidad del software mediante métricas."]}, {"codigo": "SOF0803", "nombre": "Ciberseguridad", "semestre": 8, "creditos": 6, "area": "software", "contenidos": "Principios de seguridad de la información: confidencialidad, integridad y disponibilidad. Criptografía simétrica y asimétrica, firmas digitales y certificados. Vulnerabilidades en aplicaciones web. Seguridad en redes, firewalls y detección de intrusos. Gestión de riesgos y normativa.", "aprendizajes": ["Identificar amenazas y vulnerabilidades en sistemas informáticos.", "Aplicar mecanismos criptográficos para proteger la información.", "Proponer controles de seguridad según un análisis de riesgos."]}, {"codigo": "GES0804", "nombre": "Gestión de Proyectos TI", "semestre": 8, "creditos": 5, "area": "industrial", "contenidos": "Ciclo de vida de proyectos de tecnologías de información. Alcance, cronograma, costos y riesgos. Carta Gantt y ruta crítica. Gestión de equipos y stakeholders. Estándares de gestión de proyectos. Seguimiento y control.", "aprendizajes": ["Planificar proyectos de TI definiendo alcance, cronograma, costos y riesgos.", "Controlar la ejecución de proyectos mediante indicadores."]}, {"codigo": "INT0805", "nombre": "Seminario de Licenciatura", "semestre": 8, "creditos": 4, "area": "integracion", "contenidos": "Formulación de una pregunta de investigación. Revisión bibliográfica y estado del arte. Metodología de investigación. Redacción científica y citación. Presentación de un artículo de licenciatura.", "aprendizajes": ["Formular y desarrollar un trabajo de investigación de licenciatura."]}, {"codigo": "HUM0806", "nombre": "Formación Ciudadana", "semestre": 8, "creditos": 3, "area": "formaciongeneral", "contenidos": "Ciudadanía, democracia e instituciones. Derechos humanos. Diversidad e inclusión. Participación y responsabilidad social. Desafíos contemporáneos de la sociedad.", "aprendizajes": ["Reflexionar críticamente sobre su rol como ciudadano y profesional."]}, {"codigo": "DAT0901", "nombre": "Ciencia de Datos", "semestre": 9, "creditos": 7, "area": "digital", "contenidos": "Ciclo de vida de un proyecto de ciencia de datos. Análisis exploratorio y visualización. Manipulación de datos con pandas. Ingeniería de características. Modelos predictivos y su evaluación. Big data y procesamiento distribuido. Comunicación de resultados y ética en el uso de datos.", "aprendizajes": ["Desarrollar un proyecto de ciencia de datos desde la pregunta hasta la comunicación de resultados.", "Construir y evaluar modelos predictivos sobre datos reales.", "Visualizar y comunicar hallazgos a audiencias no técnicas."]}, {"codigo": "INF0902", "nombre": "Electivo de Especialidad II", "semestre": 9, "creditos": 6, "area": "computacion", "contenidos": "Procesamiento de lenguaje natural: tokenización, representación vectorial de textos, TF-IDF, embeddings. Modelos de lenguaje y transformers. Clasificación de textos y análisis de sentimiento.", "aprendizajes": ["Representar textos para su procesamiento computacional.", "Aplicar modelos de lenguaje a tareas de clasificación de textos."]}, {"codigo": "INF0903", "nombre": "Electivo de Especialidad III", "semestre": 9, "creditos": 6, "area": "computacion", "contenidos": "Visión por computador: procesamiento digital de imágenes, filtros y detección de bordes. Redes neuronales convolucionales. Detección y segmentación de objetos. Aplicaciones industriales.", "aprendizajes": ["Procesar imágenes digitales mediante filtros y transformaciones.", "Entrenar redes convolucionales para reconocimiento de objetos."]}, {"codigo": "GES0904", "nombre": "Formulación de Proyectos TI", "semestre": 9, "creditos": 5, "area": "industrial", "contenidos": "Identificación de oportunidades tecnológicas. Estudio de mercado, técnico y organizacional. Flujo de caja, VAN, TIR y análisis de sensibilidad aplicados a proyectos de software. Fuentes de financiamiento para innovación.", "aprendizajes": ["Formular proyectos de base tecnológica.", "Evaluar la rentabilidad de proyectos TI mediante indicadores económicos."]}, {"codigo": "INT0905", "nombre": "Taller de Proyecto Integrador", "semestre": 9, "creditos": 6, "area": "integracion", "contenidos": "Desarrollo de un proyecto integrador en equipo para un cliente real. Levantamiento de requerimientos, diseño, implementación, pruebas y entrega de una solución.", "aprendizajes": ["Desarrollar una solución de ingeniería integrando competencias de la carrera."]}, {"codigo": "EMP1001", "nombre": "Emprendimiento Tecnológico", "semestre": 10, "creditos": 6, "area": "emprendimiento", "contenidos": "Transferencia tecnológica y propiedad industrial. Licenciamiento de tecnologías. Creación de empresas de base tecnológica. Ecosistema de innovación y fondos públicos.", "aprendizajes": ["Diseñar una estrategia de transferencia de una tecnología al mercado."]}, {"codigo": "PRA1002", "nombre": "Práctica Profesional II", "semestre": 10, "creditos": 12, "area": "integracion", "contenidos": "Práctica profesional de al menos 360 horas en una organización, asumiendo responsabilidades de ingeniero. Informe y defensa de práctica.", "aprendizajes": ["Desempeñarse profesionalmente asumiendo responsabilidades propias de la ingeniería."]}, {"codigo": "TIT1003", "nombre": "Proyecto de Título", "semestre": 10, "creditos": 12, "area": "integracion", "contenidos": "Desarrollo individual de un proyecto de título que resuelve un problema de ingeniería. Formulación, desarrollo, validación y defensa ante comisión.", "aprendizajes": ["Resolver un problema de ingeniería de manera autónoma y defender su solución."]}], "Ingeniería Civil Industrial": [{"codigo": "MAT0101", "nombre": "Introducción a las Matemáticas", "semestre": 1, "creditos": 8, "area": "matematicas", "contenidos": "Números reales y operatoria algebraica. Ecuaciones e inecuaciones lineales y cuadráticas, valor absoluto. Lógica proposicional y teoría de conjuntos. Polinomios, factorización y fracciones algebraicas. Funciones reales: dominio, recorrido, composición e inversa. Funciones exponencial, logarítmica y trigonométricas. Identidades trigonométricas y resolución de triángulos.", "aprendizajes": ["Resolver ecuaciones e inecuaciones en el conjunto de los números reales.", "Aplicar lógica proposicional y teoría de conjuntos en la demostración de resultados simples.", "Modelar situaciones mediante funciones exponenciales, logarítmicas y trigonométricas."]}, {"codigo": "FIS0102", "nombre": "Física General", "semestre": 1, "creditos": 8, "area": "fisica", "contenidos": "Magnitudes físicas, unidades del sistema internacional y análisis dimensional. Vectores. Cinemática en una dimensión: posición, velocidad y aceleración. Nociones de fuerza y leyes de Newton. Calor, temperatura y dilatación térmica. Carga eléctrica, corriente y ley de Ohm en circuitos simples. Ondas y sonido.", "aprendizajes": ["Aplicar el sistema internacional de unidades y el análisis dimensional.", "Describir el movimiento rectilíneo y sus causas mediante las leyes de Newton.", "Explicar fenómenos térmicos y eléctricos básicos."]}, {"codigo": "IIN0103", "nombre": "Introducción a la Ingeniería", "semestre": 1, "creditos": 6, "area": "formaciongeneral", "contenidos": "Rol del ingeniero en la sociedad y campos de desempeño profesional. Metodología de resolución de problemas de ingeniería y pensamiento de diseño. Trabajo en equipo y liderazgo. Proyecto de ingeniería en equipos: definición del problema, levantamiento de requerimientos, prototipo y presentación de resultados.", "aprendizajes": ["Reconocer el rol del ingeniero y sus campos de desempeño.", "Aplicar una metodología de resolución de problemas de ingeniería en un proyecto en equipo.", "Comunicar en forma oral y escrita el resultado de un proyecto."]}, {"codigo": "PRG0104", "nombre": "Introducción a la Programación", "semestre": 1, "creditos": 8, "area": "digital", "contenidos": "Algoritmos y resolución de problemas computacionales. Lenguaje Python: variables, tipos de datos, expresiones y operadores. Estructuras de control: condicionales y ciclos while y for. Funciones, parámetros y modularización. Listas, tuplas, diccionarios y strings. Lectura y escritura de archivos. Depuración y pruebas de programas.", "aprendizajes": ["Diseñar algoritmos para resolver problemas computacionales simples.", "Implementar programas en Python usando estructuras de control, funciones y colecciones.", "Depurar y probar programas para verificar su correcto funcionamiento."]}, {"codigo": "MAT0201", "nombre": "Cálculo Diferencial", "semestre": 2, "creditos": 8, "area": "matematicas", "contenidos": "Límites de funciones reales, límites laterales y al infinito. Continuidad y teorema del valor intermedio. Derivada: definición, interpretación geométrica como pendiente de la recta tangente y como razón de cambio. Reglas de derivación, regla de la cadena, derivación implícita. Teorema del valor medio, regla de L’Hôpital. Análisis de gráficas: crecimiento, concavidad, máximos y mínimos. Problemas de optimización.", "aprendizajes": ["Calcular límites y analizar la continuidad de funciones reales.", "Aplicar reglas de derivación, regla de la cadena y derivación implícita.", "Resolver problemas de razón de cambio y optimización mediante la derivada."]}, {"codigo": "FIS0202", "nombre": "Física Experimental", "semestre": 2, "creditos": 6, "area": "fisica", "contenidos": "Método experimental y diseño de experimentos. Mediciones, instrumentos y teoría de errores: incerteza absoluta y relativa, propagación de errores. Gráficos, linealización y ajuste por mínimos cuadrados. Informes de laboratorio. Experiencias de caída libre, péndulo simple, ley de Hooke, calorimetría y circuitos resistivos.", "aprendizajes": ["Realizar mediciones experimentales cuantificando su incerteza.", "Analizar datos experimentales mediante gráficos y ajuste por mínimos cuadrados.", "Comunicar resultados experimentales en informes de laboratorio."]}, {"codigo": "QUI0203", "nombre": "Química y Ambiente", "semestre": 2, "creditos": 5, "area": "fisica", "contenidos": "Estructura atómica y tabla periódica. Enlace químico y geometría molecular. Estequiometría y reacciones químicas. Soluciones y concentraciones. Equilibrio químico, ácidos y bases, pH. Electroquímica y corrosión. Química ambiental: contaminación del aire y del agua, gestión de residuos y sustentabilidad.", "aprendizajes": ["Relacionar la estructura atómica con las propiedades periódicas y el enlace químico.", "Resolver problemas de estequiometría, soluciones y equilibrio químico.", "Evaluar el impacto ambiental de procesos químicos."]}, {"codigo": "DAT0204", "nombre": "Base de Datos", "semestre": 2, "creditos": 7, "area": "digital", "contenidos": "Sistemas de gestión de bases de datos. Modelo entidad-relación y diagrama entidad-relación. Modelo relacional, claves primarias y foráneas. Normalización: primera, segunda y tercera forma normal. Lenguaje SQL: creación de tablas, consultas, joins, agregaciones y subconsultas. Vistas, índices y transacciones.", "aprendizajes": ["Diseñar modelos entidad-relación a partir de requerimientos.", "Transformar modelos conceptuales en esquemas relacionales normalizados.", "Construir consultas SQL para crear, consultar y modificar bases de datos."]}, {"codigo": "HUM0205", "nombre": "Habilidades Comunicativas", "semestre": 2, "creditos": 4, "area": "formaciongeneral", "contenidos": "Comunicación oral y escrita en contextos académicos y profesionales. Comprensión lectora de textos técnicos. Redacción de informes, resúmenes y correos formales. Argumentación. Presentaciones orales efectivas.", "aprendizajes": ["Redactar textos académicos y profesionales con coherencia y cohesión.", "Realizar presentaciones orales efectivas."]}, {"codigo": "MAT0301", "nombre": "Cálculo Integral", "semestre": 3, "creditos": 7, "area": "matematicas", "contenidos": "Antiderivadas e integral indefinida. Integral definida, sumas de Riemann y teorema fundamental del cálculo. Técnicas de integración: sustitución, integración por partes, fracciones parciales, sustitución trigonométrica. Integrales impropias. Aplicaciones: área entre curvas, volúmenes de sólidos de revolución, longitud de arco. Sucesiones y series numéricas, criterios de convergencia, series de potencias y de Taylor.", "aprendizajes": ["Aplicar técnicas de integración en el cálculo de integrales definidas e indefinidas.", "Calcular áreas, volúmenes y longitudes de arco mediante integrales.", "Analizar la convergencia de series numéricas y de potencias."]}, {"codigo": "FIS0302", "nombre": "Mecánica", "semestre": 3, "creditos": 8, "area": "fisica", "contenidos": "Cinemática en dos y tres dimensiones: movimiento de proyectiles y movimiento circular. Dinámica de la partícula: leyes de Newton, roce y diagramas de cuerpo libre. Trabajo, energía cinética y potencial, conservación de la energía mecánica. Momentum lineal, impulso y colisiones. Dinámica de rotación, torque y momento de inercia. Equilibrio estático. Oscilaciones armónicas.", "aprendizajes": ["Analizar el movimiento de partículas en dos y tres dimensiones.", "Aplicar las leyes de Newton y diagramas de cuerpo libre a sistemas mecánicos.", "Resolver problemas usando conservación de energía, momentum lineal y dinámica de rotación."]}, {"codigo": "ECO0303", "nombre": "Microeconomía", "semestre": 3, "creditos": 7, "area": "economia", "contenidos": "Oferta y demanda, equilibrio de mercado y elasticidades. Teoría del consumidor y utilidad. Teoría de la firma, producción y costos. Competencia perfecta, monopolio y oligopolio. Fallas de mercado y externalidades.", "aprendizajes": ["Analizar el comportamiento de consumidores y empresas en distintos mercados.", "Evaluar el efecto de políticas sobre el equilibrio de mercado."]}, {"codigo": "ETI0304", "nombre": "Ética y Normativa Profesional", "semestre": 3, "creditos": 4, "area": "formaciongeneral", "contenidos": "Ética profesional del ingeniero. Responsabilidad social y sustentabilidad. Propiedad intelectual y licencias de software. Protección de datos personales. Normativa laboral y contractual. Dilemas éticos en tecnología.", "aprendizajes": ["Analizar dilemas éticos propios del ejercicio de la ingeniería.", "Aplicar la normativa de propiedad intelectual y protección de datos."]}, {"codigo": "EMP0305", "nombre": "Taller de Innovación I", "semestre": 3, "creditos": 4, "area": "emprendimiento", "contenidos": "Pensamiento de diseño. Empatía con usuarios e identificación de problemas. Ideación y prototipado rápido. Validación con usuarios. Trabajo colaborativo en equipos.", "aprendizajes": ["Identificar problemas reales mediante técnicas de empatía con usuarios.", "Prototipar y validar soluciones innovadoras."]}, {"codigo": "MAT0401", "nombre": "Ecuaciones Diferenciales", "semestre": 4, "creditos": 7, "area": "matematicas", "contenidos": "Ecuaciones diferenciales ordinarias de primer orden: separables, lineales, exactas. Ecuaciones lineales de orden superior con coeficientes constantes. Transformada de Laplace. Matrices, determinantes y sistemas de ecuaciones lineales. Valores propios y vectores propios. Sistemas de ecuaciones diferenciales lineales. Modelación de crecimiento poblacional, circuitos y vibraciones mecánicas.", "aprendizajes": ["Resolver ecuaciones diferenciales ordinarias de primer orden y de orden superior.", "Aplicar la transformada de Laplace en la resolución de problemas de valor inicial.", "Resolver sistemas de ecuaciones diferenciales lineales usando valores y vectores propios."]}, {"codigo": "FIS0402", "nombre": "Electricidad y Magnetismo", "semestre": 4, "creditos": 7, "area": "fisica", "contenidos": "Carga eléctrica y ley de Coulomb. Campo eléctrico y ley de Gauss. Potencial eléctrico. Capacitancia y dieléctricos. Corriente, resistencia y circuitos de corriente continua, leyes de Kirchhoff. Campo magnético, fuerza de Lorentz, ley de Biot-Savart y ley de Ampère. Inducción electromagnética, ley de Faraday e inductancia.", "aprendizajes": ["Calcular campos y potenciales eléctricos de distribuciones de carga.", "Analizar circuitos de corriente continua mediante las leyes de Kirchhoff.", "Aplicar las leyes de Ampère y Faraday a problemas de magnetismo e inducción."]}, {"codigo": "FIS0403", "nombre": "Termodinámica", "semestre": 4, "creditos": 8, "area": "fisica", "contenidos": "Sistemas termodinámicos, propiedades y estados. Temperatura y ley cero. Gases ideales y ecuación de estado. Primera ley de la termodinámica, trabajo y calor. Sustancias puras y tablas de vapor. Segunda ley, entropía y máquinas térmicas. Ciclos de Carnot, Rankine y de refrigeración. Eficiencia energética.", "aprendizajes": ["Aplicar la primera ley de la termodinámica a sistemas cerrados y abiertos.", "Evaluar procesos mediante la segunda ley y el concepto de entropía.", "Analizar ciclos de potencia y refrigeración y su eficiencia."]}, {"codigo": "EMP0403", "nombre": "Taller de Innovación II", "semestre": 4, "creditos": 4, "area": "emprendimiento", "contenidos": "Modelo de negocios y propuesta de valor. Lienzo de modelo de negocios. Segmentos de clientes. Producto mínimo viable. Métricas de validación.", "aprendizajes": ["Diseñar modelos de negocio para soluciones innovadoras.", "Validar un producto mínimo viable con clientes."]}, {"codigo": "IDI0405", "nombre": "Inglés I", "semestre": 4, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel básico: presente simple y continuo, vocabulario cotidiano, comprensión de textos breves, conversaciones simples.", "aprendizajes": ["Comunicarse en inglés en situaciones cotidianas simples."]}, {"codigo": "IND0501", "nombre": "Investigación de Operaciones", "semestre": 5, "creditos": 8, "area": "industrial", "contenidos": "Modelación matemática de problemas de decisión. Programación lineal, método simplex, dualidad y sensibilidad. Programación entera. Problemas de transporte y asignación. Teoría de colas.", "aprendizajes": ["Formular modelos de programación lineal para problemas de gestión.", "Resolver e interpretar modelos de optimización."]}, {"codigo": "ECO0502", "nombre": "Macroeconomía", "semestre": 5, "creditos": 6, "area": "economia", "contenidos": "Cuentas nacionales y producto interno bruto. Inflación y desempleo. Dinero, bancos y política monetaria. Política fiscal. Modelo IS-LM y demanda agregada. Economía abierta y tipo de cambio. Crecimiento económico.", "aprendizajes": ["Interpretar indicadores macroeconómicos.", "Analizar los efectos de la política monetaria y fiscal."]}, {"codigo": "IND0503", "nombre": "Contabilidad y Costos", "semestre": 5, "creditos": 6, "area": "economia", "contenidos": "Principios contables, balance general y estado de resultados. Ciclo contable. Análisis de estados financieros. Costos directos e indirectos, costeo por absorción y variable, punto de equilibrio.", "aprendizajes": ["Interpretar estados financieros de una empresa.", "Determinar costos de productos y el punto de equilibrio."]}, {"codigo": "MAT0501", "nombre": "Probabilidad y Estadística", "semestre": 5, "creditos": 6, "area": "matematicas", "contenidos": "Estadística descriptiva: medidas de tendencia central y dispersión, gráficos. Probabilidad, axiomas, probabilidad condicional y teorema de Bayes. Variables aleatorias discretas y continuas: binomial, Poisson, normal, exponencial. Distribuciones muestrales y teorema del límite central. Estimación puntual e intervalos de confianza. Pruebas de hipótesis. Regresión lineal simple y correlación.", "aprendizajes": ["Describir conjuntos de datos mediante medidas estadísticas y gráficos.", "Calcular probabilidades usando distribuciones discretas y continuas.", "Aplicar intervalos de confianza, pruebas de hipótesis y regresión lineal en la toma de decisiones."]}, {"codigo": "IDI0505", "nombre": "Inglés II", "semestre": 5, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel pre-intermedio: pasado simple y continuo, futuro, comparativos, lectura de textos descriptivos, escritura de párrafos.", "aprendizajes": ["Comprender y producir textos breves en inglés."]}, {"codigo": "IND0601", "nombre": "Gestión de Operaciones", "semestre": 6, "creditos": 8, "area": "industrial", "contenidos": "Estrategia de operaciones. Pronóstico de demanda. Planificación agregada y plan maestro de producción. MRP. Gestión de inventarios: EOQ y stock de seguridad. Programación de la producción. Lean manufacturing.", "aprendizajes": ["Planificar la producción a partir de pronósticos de demanda.", "Gestionar inventarios y programar operaciones productivas."]}, {"codigo": "IND0602", "nombre": "Ingeniería Económica", "semestre": 6, "creditos": 7, "area": "economia", "contenidos": "Valor del dinero en el tiempo. Tasas de interés nominal y efectiva. Anualidades y amortización. Valor actual neto, tasa interna de retorno y período de recuperación. Depreciación e impuestos. Reemplazo de equipos.", "aprendizajes": ["Aplicar el valor del dinero en el tiempo a decisiones de inversión.", "Comparar alternativas mediante VAN y TIR."]}, {"codigo": "MEC0601", "nombre": "Resistencia de Materiales", "semestre": 6, "creditos": 6, "area": "industrial", "contenidos": "Esfuerzo y deformación. Ley de Hooke y propiedades mecánicas de los materiales. Carga axial, torsión en ejes circulares y flexión en vigas. Diagramas de fuerza cortante y momento flector. Esfuerzos combinados y círculo de Mohr. Deflexión de vigas y pandeo de columnas.", "aprendizajes": ["Calcular esfuerzos y deformaciones en elementos sometidos a carga axial, torsión y flexión.", "Construir diagramas de fuerza cortante y momento flector.", "Verificar la resistencia de elementos estructurales simples."]}, {"codigo": "IND0604", "nombre": "Gestión de Calidad", "semestre": 6, "creditos": 5, "area": "industrial", "contenidos": "Conceptos de calidad y calidad total. Control estadístico de procesos, cartas de control y capacidad de procesos. Herramientas de mejora continua. Seis Sigma. Normas ISO 9001.", "aprendizajes": ["Aplicar control estadístico de procesos.", "Proponer mejoras de calidad usando herramientas de mejora continua."]}, {"codigo": "IDI0605", "nombre": "Inglés III", "semestre": 6, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel intermedio: presente perfecto, condicionales, voz pasiva, lectura de textos técnicos, presentaciones breves.", "aprendizajes": ["Comprender textos técnicos en inglés y realizar presentaciones breves."]}, {"codigo": "IND0701", "nombre": "Evaluación de Proyectos", "semestre": 7, "creditos": 8, "area": "economia", "contenidos": "Ciclo de un proyecto de inversión. Estudio de mercado, técnico, legal y organizacional. Construcción del flujo de caja. Tasa de descuento. VAN, TIR y análisis de riesgo y sensibilidad. Evaluación social de proyectos.", "aprendizajes": ["Construir el flujo de caja de un proyecto de inversión.", "Evaluar la rentabilidad privada y social de proyectos."]}, {"codigo": "IND0702", "nombre": "Logística y Cadena de Suministro", "semestre": 7, "creditos": 7, "area": "industrial", "contenidos": "Diseño de la cadena de suministro. Localización de instalaciones. Gestión de compras y proveedores. Distribución, ruteo de vehículos y almacenaje. Efecto látigo. Indicadores logísticos.", "aprendizajes": ["Diseñar redes logísticas y de distribución.", "Evaluar el desempeño de la cadena de suministro con indicadores."]}, {"codigo": "IND0703", "nombre": "Finanzas Corporativas", "semestre": 7, "creditos": 7, "area": "economia", "contenidos": "Objetivo financiero de la empresa. Riesgo y retorno. Modelo CAPM y costo de capital. Estructura de capital. Política de dividendos. Valoración de empresas.", "aprendizajes": ["Estimar el costo de capital de una empresa.", "Valorar empresas mediante flujos descontados."]}, {"codigo": "EMP0704", "nombre": "Taller de Innovación III", "semestre": 7, "creditos": 4, "area": "emprendimiento", "contenidos": "Escalamiento de emprendimientos. Estrategias de crecimiento. Financiamiento y levantamiento de capital. Pitch ante inversionistas.", "aprendizajes": ["Elaborar una estrategia de escalamiento y financiamiento.", "Presentar un emprendimiento ante inversionistas."]}, {"codigo": "IDI0705", "nombre": "Inglés IV", "semestre": 7, "creditos": 4, "area": "ingles", "contenidos": "Inglés nivel intermedio alto: estilo indirecto, redacción de correos y reportes profesionales, entrevistas laborales.", "aprendizajes": ["Comunicarse en inglés en contextos profesionales."]}, {"codigo": "IND0801", "nombre": "Simulación", "semestre": 8, "creditos": 8, "area": "industrial", "contenidos": "Simulación de eventos discretos. Generación de números y variables aleatorias. Modelos de colas y sistemas productivos. Software de simulación. Validación de modelos y análisis de resultados.", "aprendizajes": ["Construir modelos de simulación de eventos discretos.", "Analizar escenarios de sistemas productivos mediante simulación."]}, {"codigo": "IND0802", "nombre": "Gestión de Personas", "semestre": 8, "creditos": 6, "area": "industrial", "contenidos": "Comportamiento organizacional. Reclutamiento y selección. Evaluación de desempeño. Compensaciones. Liderazgo, motivación y clima laboral. Relaciones laborales.", "aprendizajes": ["Diseñar procesos de gestión de personas en una organización."]}, {"codigo": "IND0803", "nombre": "Marketing", "semestre": 8, "creditos": 6, "area": "economia", "contenidos": "Investigación de mercados. Segmentación, posicionamiento y mezcla de marketing. Comportamiento del consumidor. Marketing digital. Plan de marketing.", "aprendizajes": ["Elaborar un plan de marketing para un producto o servicio."]}, {"codigo": "INT0805", "nombre": "Seminario de Licenciatura", "semestre": 8, "creditos": 6, "area": "integracion", "contenidos": "Formulación de una pregunta de investigación. Revisión bibliográfica y estado del arte. Metodología de investigación. Redacción científica y citación. Presentación de un artículo de licenciatura.", "aprendizajes": ["Formular y desarrollar un trabajo de investigación de licenciatura."]}, {"codigo": "HUM0806", "nombre": "Formación Ciudadana", "semestre": 8, "creditos": 4, "area": "formaciongeneral", "contenidos": "Ciudadanía, democracia e instituciones. Derechos humanos. Diversidad e inclusión. Participación y responsabilidad social. Desafíos contemporáneos de la sociedad.", "aprendizajes": ["Reflexionar críticamente sobre su rol como ciudadano y profesional."]}, {"codigo": "IND0901", "nombre": "Estrategia y Control de Gestión", "semestre": 9, "creditos": 7, "area": "industrial", "contenidos": "Planificación estratégica. Análisis del entorno y de la industria. Ventajas competitivas. Cuadro de mando integral e indicadores de gestión. Control presupuestario.", "aprendizajes": ["Formular estrategias competitivas para una organización.", "Diseñar sistemas de control de gestión con indicadores."]}, {"codigo": "GES0804", "nombre": "Gestión de Proyectos TI", "semestre": 9, "creditos": 6, "area": "industrial", "contenidos": "Ciclo de vida de proyectos de tecnologías de información. Alcance, cronograma, costos y riesgos. Carta Gantt y ruta crítica. Gestión de equipos y stakeholders. Estándares de gestión de proyectos. Seguimiento y control.", "aprendizajes": ["Planificar proyectos de TI definiendo alcance, cronograma, costos y riesgos.", "Controlar la ejecución de proyectos mediante indicadores."]}, {"codigo": "DAT0901", "nombre": "Ciencia de Datos", "semestre": 9, "creditos": 7, "area": "digital", "contenidos": "Ciclo de vida de un proyecto de ciencia de datos. Análisis exploratorio y visualización. Manipulación de datos con pandas. Ingeniería de características. Modelos predictivos y su evaluación. Big data y procesamiento distribuido. Comunicación de resultados y ética en el uso de datos.", "aprendizajes": ["Desarrollar un proyecto de ciencia de datos desde la pregunta hasta la comunicación de resultados.", "Construir y evaluar modelos predictivos sobre datos reales.", "Visualizar y comunicar hallazgos a audiencias no técnicas."]}, {"codigo": "INT0905", "nombre": "Taller de Proyecto Integrador", "semestre": 9, "creditos": 6, "area": "integracion", "contenidos": "Desarrollo de un proyecto integrador en equipo para un cliente real. Levantamiento de requerimientos, diseño, implementación, pruebas y entrega de una solución.", "aprendizajes": ["Desarrollar una solución de ingeniería integrando competencias de la carrera."]}, {"codigo": "PRA0404", "nombre": "Práctica Profesional I", "semestre": 9, "creditos": 4, "area": "integracion", "contenidos": "Práctica en una organización de al menos 180 horas. Inserción en equipos de trabajo, aplicación de conocimientos básicos de la disciplina e informe de práctica.", "aprendizajes": ["Desempeñarse en un entorno laboral aplicando conocimientos de la disciplina."]}, {"codigo": "EMP1001", "nombre": "Emprendimiento Tecnológico", "semestre": 10, "creditos": 6, "area": "emprendimiento", "contenidos": "Transferencia tecnológica y propiedad industrial. Licenciamiento de tecnologías. Creación de empresas de base tecnológica. Ecosistema de innovación y fondos públicos.", "aprendizajes": ["Diseñar una estrategia de transferencia de una tecnología al mercado."]}, {"codigo": "PRA1002", "nombre": "Práctica Profesional II", "semestre": 10, "creditos": 12, "area": "integracion", "contenidos": "Práctica profesional de al menos 360 horas en una organización, asumiendo responsabilidades de ingeniero. Informe y defensa de práctica.", "aprendizajes": ["Desempeñarse profesionalmente asumiendo responsabilidades propias de la ingeniería."]}, {"codigo": "TIT1003", "nombre": "Proyecto de Título", "semestre": 10, "creditos": 12, "area": "integracion", "contenidos": "Desarrollo individual de un proyecto de título que resuelve un problema de ingeniería. Formulación, desarrollo, validación y defensa ante comisión.", "aprendizajes": ["Resolver un problema de ingeniería de manera autónoma y defender su solución."]}]};
+</script>
+<script>
+"use strict";
+const AREAS = {
+  matematicas:{label:"Matemáticas"}, fisica:{label:"Ciencias Físicas"},
+  control:{label:"Control y Automatización"}, electronica:{label:"Electrónica"},
+  mecatronica:{label:"Mecatrónica"}, digital:{label:"Transformación Digital y Datos"},
+  emprendimiento:{label:"Innovación y Emprendimiento"}, integracion:{label:"Integración y Título"},
+  ingles:{label:"Inglés"}, formaciongeneral:{label:"Formación General"},
+  energia:{label:"Energía y Potencia"}, industrial:{label:"Procesos y Gestión Industrial"},
+  economia:{label:"Economía y Finanzas"}, computacion:{label:"Ciencias de la Computación"},
+  software:{label:"Ingeniería de Software"},
+};
+const REQUISITOS = {"Ingeniería Civil en Informática": {"MAT0201": ["MAT0101"], "FIS0202": ["FIS0102", "MAT0101"], "DAT0204": ["PRG0104"], "MAT0301": ["MAT0201"], "FIS0302": ["FIS0202", "MAT0201"], "PRG0303": ["PRG0104"], "ETI0304": ["IIN0103"], "EMP0305": ["IIN0103"], "MAT0401": ["MAT0301"], "FIS0402": ["FIS0302", "MAT0301"], "EMP0403": ["EMP0305"], "PRA0404": ["PRG0303", "DAT0204", "ETI0304", "MAT0301", "FIS0302", "EMP0305"], "MAT0501": ["MAT0301"], "INF0502": ["PRG0303"], "INF0503": ["PRG0303"], "PRG0504": ["PRG0303"], "IDI0505": ["IDI0405"], "INF0601": ["INF0502"], "SOF0602": ["PRG0504"], "SOF0603": ["PRG0504"], "DAT0604": ["MAT0501", "DAT0204"], "IDI0605": ["IDI0505"], "INF0701": ["INF0601"], "INF0702": ["INF0502"], "SOF0703": ["PRG0504"], "EMP0704": ["EMP0403"], "IDI0705": ["IDI0605"], "INF0801": ["INF0601"], "SOF0802": ["SOF0602", "SOF0703"], "SOF0803": ["SOF0603"], "GES0804": ["ETI0304"], "INT0805": ["INF0601", "SOF0703", "DAT0604", "FIS0402"], "DAT0901": ["DAT0604", "INF0601"], "INF0902": ["INF0601"], "INF0903": ["INF0601"], "GES0904": ["SOF0802"], "INT0905": ["SOF0802", "GES0804", "INT0805"], "EMP1001": ["GES0904"], "PRA1002": ["PRA0404", "INT0905", "GES0904", "DAT0901", "INF0902", "INF0903"], "TIT1003": ["INT0905"]}, "Ingeniería Civil Industrial": {"MAT0201": ["MAT0101"], "FIS0202": ["FIS0102", "MAT0101"], "DAT0204": ["PRG0104"], "MAT0301": ["MAT0201"], "FIS0302": ["FIS0202", "MAT0201"], "ECO0303": ["MAT0201"], "ETI0304": ["IIN0103"], "EMP0305": ["IIN0103"], "MAT0401": ["MAT0301"], "FIS0402": ["FIS0302", "MAT0301"], "FIS0403": ["FIS0302"], "EMP0403": ["EMP0305"], "IND0501": ["MAT0401"], "ECO0502": ["ECO0303"], "IND0503": ["ECO0303"], "MAT0501": ["MAT0301"], "IDI0505": ["IDI0405"], "IND0601": ["IND0501", "MAT0501"], "IND0602": ["IND0503"], "MEC0601": ["FIS0302"], "IND0604": ["MAT0501"], "IDI0605": ["IDI0505"], "IND0701": ["IND0602"], "IND0702": ["IND0601"], "IND0703": ["IND0602"], "EMP0704": ["EMP0403"], "IDI0705": ["IDI0605"], "IND0801": ["IND0601"], "IND0802": ["IND0601"], "IND0803": ["ECO0502"], "INT0805": ["IND0601", "IND0602"], "IND0901": ["IND0701", "IND0803"], "GES0804": ["IND0701"], "DAT0901": ["MAT0501", "DAT0204"], "INT0905": ["IND0801", "INT0805"], "PRA0404": ["IND0601"], "EMP1001": ["EMP0704"], "PRA1002": ["PRA0404", "INT0905"], "TIT1003": ["INT0905"]}};
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const norm = s => (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+
+/* ---- leer handoff de los pasos previos ---- */
+function leerResultado(){
+  try{ const r=JSON.parse(sessionStorage.getItem("convalidacion_resultado")); if(r&&r.carrera) return r; }catch(e){}
+  return null;
+}
+function leerPostulante(){
+  try{ return JSON.parse(sessionStorage.getItem("postulante")) || (window.POSTULANTE||null); }catch(e){ return window.POSTULANTE||null; }
+}
+const RES = leerResultado();
+const POST = leerPostulante();
+const CONV = new Set((RES&&RES.convalidadas)||[]);
+const REV  = new Set((RES&&RES.revision)||[]);
+
+let carreraActual = (RES&&MALLAS[RES.carrera]) ? RES.carrera : Object.keys(MALLAS)[0];
+
+/* ---- identidad ---- */
+function pintarIdentidad(){
+  if(!POST){ $("who").hidden=true; return; }
+  const nom=[POST.nombres,POST.apellidos].filter(Boolean).join(" ").trim();
+  if(!nom){ $("who").hidden=true; return; }
+  $("who").hidden=false;
+  $("whoName").textContent=nom;
+  const ini=(POST.nombres||nom).trim()[0]||"·";
+  $("avatar").textContent=ini.toUpperCase();
+}
+
+/* ---- selector de carrera ---- */
+function pintarSelector(){
+  const sel=$("car");
+  sel.innerHTML=Object.keys(MALLAS).map(c=>`<option value="${esc(c)}"${c===carreraActual?" selected":""}>${esc(c)}</option>`).join("");
+  sel.addEventListener("change",()=>{ carreraActual=sel.value; render(); });
+}
+
+/* ---- stats ---- */
+function pintarStats(asigs){
+  const conv=asigs.filter(a=>CONV.has(a.codigo));
+  const rev =asigs.filter(a=>REV.has(a.codigo)&&!CONV.has(a.codigo));
+  const crTot=asigs.reduce((s,a)=>s+(a.creditos||0),0);
+  const crConv=conv.reduce((s,a)=>s+(a.creditos||0),0);
+  const pct=crTot?Math.round(crConv/crTot*100):0;
+  $("stats").innerHTML=`
+    <div class="stat ok"><b>${conv.length}</b><span>asignaturas convalidadas</span></div>
+    ${rev.length?`<div class="stat rev"><b>${rev.length}</b><span>en revisión manual</span></div>`:""}
+    <div class="stat"><b>${crConv}<span style="font-size:13px;color:var(--ink-faint)"> / ${crTot}</span></b><span>créditos reconocidos · ${pct}%</span></div>
+    <div class="stat"><b>${asigs.length}</b><span>asignaturas del plan</span></div>`;
+}
+
+/* ---- leyenda ---- */
+function pintarLeyenda(asigs){
+  const areas=[...new Set(asigs.map(a=>a.area))].filter(a=>AREAS[a]);
+  const items=areas.map(a=>`<span class="lg"><span class="sw" style="background:var(--a-${a})"></span>${esc(AREAS[a].label)}</span>`).join("");
+  const states = (CONV.size||REV.size)
+    ? `<span class="legend-sep"></span>
+       <span class="state"><span class="chip cv"></span>Convalidada</span>
+       ${REV.size?`<span class="state"><span class="chip rv"></span>En revisión</span>`:""}`
+    : "";
+  $("legend").innerHTML=items+states;
+}
+
+/* ---- hint cuando no hay convalidación ---- */
+function pintarHint(){
+  if(CONV.size||REV.size){ $("hint").hidden=true; return; }
+  $("hint").hidden=false;
+  $("hintText").innerHTML = RES
+    ? `No se sugirieron convalidaciones para esta carga. Estás viendo el plan completo. <a href="convalidacion.html">Volver a evaluar ›</a>`
+    : `Estás viendo la malla en modo consulta. Para destacar tus ramos convalidados, <a href="convalidacion.html">completa primero la convalidación ›</a>`;
+}
+
+/* ---- tablero ---- */
+function estado(a){ return CONV.has(a.codigo)?"cv":(REV.has(a.codigo)?"rv":""); }
+
+function render(){
+  const asigs=MALLAS[carreraActual]||[];
+  $("sub").textContent = (CONV.size||REV.size)
+    ? "Plan de estudios completo con tus asignaturas convalidadas destacadas. Toca cualquier ramo para ver sus contenidos y aprendizajes."
+    : "Plan de estudios completo de la carrera. Toca cualquier ramo para ver sus contenidos y aprendizajes.";
+  pintarStats(asigs); pintarLeyenda(asigs); pintarHint();
+
+  const sems=[...new Set(asigs.map(a=>a.semestre))].sort((x,y)=>x-y);
+  const board=$("board"); board.innerHTML="";
+  sems.forEach(s=>{
+    const col=document.createElement("div"); col.className="col";
+    const ramos=asigs.filter(a=>a.semestre===s);
+    const cr=ramos.reduce((t,a)=>t+(a.creditos||0),0);
+    let html=`<div class="col-h"><b>Semestre ${s}</b><span>${cr} cr</span></div>`;
+    ramos.forEach(a=>{
+      const st=estado(a);
+      const seal = st==="cv"?`<span class="seal">✓</span>`:(st==="rv"?`<span class="seal rev">?</span>`:"");
+      const stamp = st==="cv"?`<span class="stamp">Convalidada</span>`:(st==="rv"?`<span class="stamp rev">Revisión</span>`:"");
+      html+=`<article class="card ${st} ${st?"":"dim"}" tabindex="0" data-cod="${esc(a.codigo)}" style="--ac:var(--a-${a.area})">
+        ${stamp}
+        <div class="cod">${esc(a.codigo)}</div>
+        <div class="nm">${esc(a.nombre)}</div>
+        <div class="meta">
+          <span class="area"><span class="d"></span>${esc((AREAS[a.area]||{}).label||a.area)}</span>
+          <span class="cr">${a.creditos||0} cr</span>
+        </div>
+        ${seal}
+      </article>`;
+    });
+    col.innerHTML=html;
+    board.appendChild(col);
+  });
+  board.querySelectorAll(".card").forEach(c=>{
+    const open=()=>abrir(c.dataset.cod);
+    c.addEventListener("click",open);
+    c.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){e.preventDefault();open();} });
+    c.addEventListener("mouseenter",()=>resaltar(c.dataset.cod));
+    c.addEventListener("mouseleave",()=>resaltar(null));
+    c.addEventListener("focus",()=>resaltar(c.dataset.cod));
+    c.addEventListener("blur",()=>resaltar(null));
+  });
+  requestAnimationFrame(dibujarFlechas);
+}
+
+/* ---- drawer ---- */
+function abrir(cod){
+  const a=(MALLAS[carreraActual]||[]).find(x=>x.codigo===cod); if(!a) return;
+  $("drCod").textContent=a.codigo;
+  $("drName").textContent=a.nombre;
+  const st=estado(a);
+  const tags=[`<span class="tag"><span class="d" style="background:var(--a-${a.area})"></span>${esc((AREAS[a.area]||{}).label||a.area)}</span>`,
+    `<span class="tag">Semestre ${a.semestre}</span>`,
+    `<span class="tag">${a.creditos||0} créditos</span>`];
+  if(st==="cv") tags.unshift(`<span class="tag cv">✓ Convalidada</span>`);
+  else if(st==="rv") tags.unshift(`<span class="tag rv">En revisión manual</span>`);
+  $("drTags").innerHTML=tags.join("");
+  $("drCont").textContent=a.contenidos||"Sin descripción disponible.";
+  const reqs=(REQUISITOS[carreraActual]||{})[a.codigo]||[];
+  if(reqs.length){
+    const byCod=Object.fromEntries((MALLAS[carreraActual]||[]).map(x=>[x.codigo,x]));
+    $("drPrq").innerHTML=reqs.map(rc=>{
+      const r=byCod[rc];
+      const ac=r?`var(--a-${r.area})`:"var(--ink-faint)";
+      return `<button class="prq" type="button" data-go="${esc(rc)}" style="--ac:${ac}">`
+        +`<span class="d"></span><span class="t"><span class="c">${esc(rc)}</span>`
+        +`${r?`<span class="n">${esc(r.nombre)}</span>`:""}</span></button>`;
+    }).join("");
+    $("drPrqWrap").hidden=false;
+    $("drPrq").querySelectorAll(".prq").forEach(b=>b.addEventListener("click",()=>abrir(b.dataset.go)));
+  } else $("drPrqWrap").hidden=true;
+  const ae=a.aprendizajes||[];
+  if(ae.length){ $("drAEwrap").hidden=false; $("drAE").innerHTML=ae.map(x=>`<li>${esc(x)}</li>`).join(""); }
+  else $("drAEwrap").hidden=true;
+  $("scrim").classList.add("on"); $("drawer").classList.add("on");
+}
+function cerrar(){ $("scrim").classList.remove("on"); $("drawer").classList.remove("on"); }
+$("drX").addEventListener("click",cerrar);
+$("scrim").addEventListener("click",cerrar);
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") cerrar(); });
+
+/* ---- overlay de prerrequisitos (flechas sobre el tablero) ---- */
+const SVGNS="http://www.w3.org/2000/svg";
+let arrowsEl=null;
+function dibujarFlechas(){
+  const board=$("board");
+  if(arrowsEl){ arrowsEl.remove(); arrowsEl=null; }
+  const reqMap=REQUISITOS[carreraActual]||{};
+  const hayDatos=Object.keys(reqMap).length>0;
+  $("prqToggle").style.display = hayDatos ? "" : "none";
+  if(!hayDatos) return;
+  const cards={};
+  board.querySelectorAll(".card").forEach(c=>cards[c.dataset.cod]=c);
+  const bx=board.getBoundingClientRect();
+  const svg=document.createElementNS(SVGNS,"svg");
+  svg.setAttribute("class","arrows");
+  svg.setAttribute("width", board.scrollWidth);
+  svg.setAttribute("height", board.scrollHeight);
+  const defs=document.createElementNS(SVGNS,"defs");
+  const areaKeys=Object.keys(AREAS);
+  defs.innerHTML=areaKeys.map(a=>`<marker id="ah-${a}" markerWidth="13" markerHeight="13" refX="9.5" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L11,5.5 L0,11 Z" style="fill:var(--a-${a})"/></marker>`).join("")
+    +'<marker id="ah" markerWidth="13" markerHeight="13" refX="9.5" refY="5.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0,0 L11,5.5 L0,11 Z" fill="#9aa6b6"/></marker>';
+  svg.appendChild(defs);
+  const byCod=Object.fromEntries((MALLAS[carreraActual]||[]).map(x=>[x.codigo,x]));
+  let any=false;
+  Object.keys(reqMap).forEach(cod=>{
+    const tgt=cards[cod]; if(!tgt) return;
+    const tr=tgt.getBoundingClientRect();
+    const tx=tr.left-bx.left, ty=tr.top-bx.top+tr.height/2;
+    reqMap[cod].forEach(rc=>{
+      const src=cards[rc]; if(!src) return;
+      const sr=src.getBoundingClientRect();
+      const sx=sr.left-bx.left+sr.width, sy=sr.top-bx.top+sr.height/2;
+      const dx=Math.max(34,(tx-sx)*0.45);
+      const srcArea=(byCod[rc]||{}).area;
+      const p=document.createElementNS(SVGNS,"path");
+      p.setAttribute("class","edge");
+      p.setAttribute("d",`M${sx},${sy} C${sx+dx},${sy} ${tx-dx},${ty} ${tx},${ty}`);
+      p.setAttribute("marker-end", srcArea && AREAS[srcArea] ? `url(#ah-${srcArea})` : "url(#ah)");
+      if(srcArea && AREAS[srcArea]) p.style.setProperty("--ec", `var(--a-${srcArea})`);
+      p.dataset.from=rc; p.dataset.to=cod;
+      svg.appendChild(p); any=true;
+    });
+  });
+  if(any){ board.appendChild(svg); arrowsEl=svg; }
+}
+function resaltar(cod){
+  if(!arrowsEl) return;
+  if(!cod){
+    arrowsEl.classList.remove("focusing");
+    arrowsEl.querySelectorAll(".edge.on").forEach(p=>p.classList.remove("on"));
+    return;
+  }
+  arrowsEl.classList.add("focusing");
+  arrowsEl.querySelectorAll(".edge").forEach(p=>{
+    p.classList.toggle("on", p.dataset.from===cod || p.dataset.to===cod);
+  });
+}
+$("prqToggle").addEventListener("click",()=>{
+  const off=document.body.classList.toggle("no-arrows");
+  $("prqToggle").setAttribute("aria-pressed", String(!off));
+});
+let _rt;
+window.addEventListener("resize",()=>{ clearTimeout(_rt); _rt=setTimeout(dibujarFlechas,120); });
+
+/* ---- init ---- */
+pintarIdentidad();
+pintarSelector();
+render();
+</script>
+</body>
+</html>
