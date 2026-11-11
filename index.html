@@ -305,7 +305,7 @@ footer img{height:30px}
     <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
     <input type="hidden" name="origen">
     <button class="btn btn-buy" type="submit" id="send">Solicitar demo →</button>
-    <div class="ok" id="ok">Listo. Se abrió su correo con la solicitud; envíelo y le respondemos en 1 día hábil.</div>
+    <div class="ok" id="ok">¡Gracias! Recibimos su solicitud.</div>
   </form>
 </div></section>
 
@@ -334,7 +334,7 @@ MODS.forEach((m,i)=>{
 document.querySelectorAll('[data-plan]').forEach(a=>a.addEventListener('click',()=>{const s=document.querySelector('select[name=plan]');s.value=a.dataset.plan}));
 const fl=document.getElementById('float'),ct=document.getElementById('contacto');
 addEventListener('scroll',()=>{const r=ct.getBoundingClientRect();fl.classList.toggle('show',scrollY>700&&r.top>innerHeight)},{passive:true});
-const SCRIPT_URL=''; // URL de la aplicación web de Apps Script (termina en /exec)
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbyORs-shN75JPBFf0CVSoGCfdEJyc_E0reWzXv1RNpicRSdd3Ua6rc8VuNmiJ7Bqjp_lw/exec'; // URL de la aplicación web de Apps Script (termina en /exec)
 const MAILTO='jorge.sabattin@concienciaglobal.cl,Josemanuel@concienciaglobal.cl';
 document.getElementById('f').addEventListener('submit',async e=>{
  e.preventDefault();const f=e.target,ok=document.getElementById('ok'),btn=document.getElementById('send');
