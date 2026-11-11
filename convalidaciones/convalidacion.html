@@ -6,9 +6,9 @@
 <title>Convalidación de Asignaturas · SIGA</title>
 <style>
   :root{
-    --bg:#eef1f5; --surface:#ffffff; --ink:#0e1b29; --muted:#5a6b7b;
-    --line:#e0e6ed; --line-2:#eef2f6;
-    --brand:#0a2a43; --brand-2:#16708c; --accent:#1f9d6b; --accent-d:#157a52;
+    --bg:#F6F4EE; --surface:#ffffff; --ink:#0F1F1C; --muted:#5a6b7b;
+    --line:#e0e6ed; --line-2:#F6F4EE;
+    --brand:#0F1F1C; --brand-2:#0E7A62; --accent:#0E7A62; --accent-d:#0A5E4B;
     --warn:#d98a2b; --soft:#f3f6f9;
     --shadow:0 1px 2px rgba(14,27,41,.05), 0 8px 28px rgba(14,27,41,.07);
     --radius:14px;
@@ -24,7 +24,7 @@
 
   /* Header */
   header{
-    background:linear-gradient(160deg,var(--brand) 0%, #103a59 100%);
+    background:linear-gradient(160deg,var(--brand) 0%, #0B4A3D 100%);
     color:#fff; padding:34px 0 30px; margin-bottom:30px;
     border-bottom:3px solid var(--brand-2);
   }
@@ -310,14 +310,19 @@
   .demobar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:0 0 18px;padding:12px 16px;border-radius:14px;
     background:#fff8e6;border:1px solid #f1d38a;color:#6b4e00;font-size:.9rem}
   .demobar b{font-weight:800;letter-spacing:.02em;text-transform:uppercase;font-size:.75rem;background:#f6c344;color:#3d2c00;padding:3px 9px;border-radius:99px}
-  .demobar button{margin-left:auto;appearance:none;border:0;cursor:pointer;background:#0a2a43;color:#fff;font:inherit;font-weight:700;padding:9px 16px;border-radius:10px}
+  .demobar button{margin-left:auto;appearance:none;border:0;cursor:pointer;background:#0F1F1C;color:#fff;font:inherit;font-weight:700;padding:9px 16px;border-radius:10px}
   .demobar button[disabled]{opacity:.6;cursor:progress}
 </style>
-</head>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"><style>
+/* identidad SIGA v1 */
+body{font-family:'Instrument Sans',-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif!important}
+h1,h2,h3,.title,.brand,.brandwrap b{font-family:'Bricolage Grotesque','Instrument Sans',sans-serif!important;letter-spacing:-.02em}
+.siga-iso{height:34px;width:auto;display:block}
+</style></head>
 <body>
 <header>
   <div class="wrap">
-    <div class="brand"><span class="mark"><span>S</span></span> SIGA · Convalidación de estudios</div>
+    <div class="brand"><img class="siga-iso" src="../marca/SIGA_isotipo.svg" alt="SIGA"> SIGA · Convalidación de estudios</div>
     <div class="flow">
       <span class="dot"></span> Identificación
       <span class="sep"></span>
